@@ -1,0 +1,797 @@
+  <!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Образ плюс</title>
+<link rel="icon" href="Образ плюс.ico" type="image/x-icon" />
+<style>
+  body {
+    font-family: 'Constantia';
+    background-color: #FFFFFF;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: auto;
+    background: #BFD6F6 ;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  h1, h2, h3 {
+    text-align: center;
+    color: #2c3e50;
+  }
+
+  h1 {
+    margin-bottom: 10px;
+    color: #405C73;
+  }
+
+  /* Стайли для форм */
+  input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s;
+  }
+
+  input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+    border-color: #2980b9;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(41,128,185,0.2);
+  }
+
+  /* Кнопки */
+  button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    background-color: #405C73;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .form-wrapper {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  button:hover {
+    background-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  button.secondary {
+    background-color: #7f8c8d;
+  }
+
+  button.danger {
+    background-color: #e74c3c;
+  }
+
+  /* Общий стиль для разделов */
+  .section {
+    display: none;
+    animation: fadeIn 0.4s forwards;
+  }
+
+  /* Видимость активных */
+  .active {
+    display: block;
+  }
+
+  /* Анимация появления */
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  /* Стили для списка заказов */
+  #userOrdersList {
+    margin-top: 30px;
+  }
+
+  #userOrdersList h2 {
+    margin-bottom: 20px;
+    color: #2980b9;
+  }
+
+  .order-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  .order-card h3 {
+    margin-top: 0;
+    color: #2c3e50;
+  }
+
+  /* Стили для карточек автомобилей */
+  .car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .car-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    transition: all 0.3s;
+  }
+
+  .car-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  .car-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .car-info {
+    padding: 15px;
+  }
+
+  .car-info h3 {
+    margin: 0 0 10px;
+    text-align: left;
+    color: #2c3e50;
+  }
+
+  .car-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #27ae60;
+    margin: 10px 0;
+  }
+
+  .car-features {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin: 10px 0;
+  }
+
+  /* Навигация */
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .nav-buttons button {
+    flex: 1;
+  }
+
+  /* Сообщения об ошибках */
+  .error-message {
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+<img src="Образ плюс.png" alt="Образ плюс" style="display:block; margin: 10px auto; max-width: 200px;" />
+<h1>Образ плюс</h1>
+
+  <!-- Регистрация -->
+  <div id="registrationSection" class="section active">
+    <h2>Регистрация</h2>
+    <div class="form-wrapper">
+      <input type="text" id="regFirstName" placeholder="Имя" required />
+      <input type="text" id="regLastName" placeholder="Фамилия" required />
+      <input type="email" id="regEmail" placeholder="Email" required />
+      <input type="password" id="regPassword" placeholder="Пароль" required />
+      <div id="regError" class="error-message"></div>
+      <button onclick="register()">Зарегистрироваться</button>
+      <div class="nav-buttons">
+        <button class="secondary" onclick="showLogin()">Войти</button>
+        <button class="secondary" onclick="showAdminLogin()">Вход для администратора</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Вход -->
+  <div id="loginSection" class="section">
+    <h2>Вход</h2>
+    <div class="form-wrapper">
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Пароль" required />
+      <div id="loginError" class="error-message"></div>
+      <button onclick="login()">Войти</button>
+      <button class="secondary" onclick="showRegistration()">Назад к регистрации</button>
+    </div>
+  </div>
+
+  <!-- Вход для администратора -->
+  <div id="adminLoginSection" class="section">
+    <h2>Вход для администратора</h2>
+    <div class="form-wrapper">
+      <input type="password" id="adminPassword" placeholder="Пароль администратора" required />
+      <div id="adminError" class="error-message"></div>
+      <button onclick="adminLogin()">Войти как администратора</button>
+      <button class="secondary" onclick="showRegistration()">Назад к регистрации</button>
+    </div>
+  </div>
+
+<!-- Основное меню -->
+<div id="mainMenu" class="section">
+  <h2>Добро пожаловать, <span id="userName"></span>!</h2>
+  <button onclick="showCars()">Каталог продукции</button>
+  <button onclick="showNewCatalog()">Типы материалов</button>
+  <button onclick="showMyOrders()">Мои заказы</button>
+  <button class="secondary" onclick="logout()">Выйти</button>
+</div>
+
+<!-- Админское меню -->
+<div id="adminMenu" class="section">
+  <h2>Панель администратора</h2>
+  <button onclick="showAdminOrders()">Просмотр заказов</button>
+  <button class="secondary" onclick="adminLogout()">Выйти</button>
+</div>
+
+<!-- Страница с автомобилями -->
+<div id="carsPage" class="section">
+  <h2>Каталог продукции</h2>
+  
+  <div class="car-grid">
+    <!-- Эконом класс -->
+    <div class="car-card">
+      <img src="https://cdn1.ozone.ru/s3/multimedia-r/6372735099.jpg" alt="Kia Rio" />
+      <div class="car-info">
+        <h3>Кресло</h3>
+        <div class="car-features">
+          <div>Кресло детское цвет Белый и Розовый</div>
+          <div>Артикул: 3028272</div>
+          <div>Класс износостойкости: 32</div>
+        </div>
+        <div class="car-price">15 324 руб</div>
+        <button onclick="buyCar('Кресло', 15324)">Купить</button>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="https://media.komus.ru/medias/sys_master/root/hd2/h85/11986244861982/1762618-1-400Wx400H.jpg" alt="Hyundai Solaris" />
+      <div class="car-info">
+        <h3>Полка</h3>
+        <div class="car-features">
+          <div>Тип: Массивная доска</div>
+          <div>Толщина: 20 мм</div>
+          <div>Порода дерева: Дуб</div>
+        </div>
+        <div class="car-price">2670 руб.</div>
+        <button onclick="buyCar('Массивная доска', 2670)">Купить</button>
+      </div>
+    </div>
+
+    <!-- Средний класс -->
+    <div class="car-card">
+      <img src="https://avatars.mds.yandex.net/i?id=11320bbddff842a13ab76b4c234cc271f0b21cb3-13012864-images-thumbs&n=13" alt="Toyota Camry" />
+      <div class="car-info">
+        <h3>Стеллажи</h3>
+        <div class="car-features">
+          <div>Тип: дерево</div>
+          <div>Толщина: 14 мм</div>
+          <div>Покрытие: Лак</div>
+        </div>
+        <div class="car-price">8 348 руб</div>
+        <button onclick="buyCar('Паркетная доска', 8348)">Купить</button>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="https://avatars.mds.yandex.net/get-mpic/5234200/img_id3614336007263646014.jpeg/orig" alt="Volkswagen Tiguan" />
+      <div class="car-info">
+        <h3>Столы</h3>
+        <div class="car-features">
+          <div>Тип: Пробковое покрытие</div>
+          <div>Толщина: 6 мм</div>
+        </div>
+        <div class="car-price">15 325 руб</div>
+        <button onclick="buyCar('Пробковое покрытие', 15325)">Купить</button>
+      </div>
+    </div>
+
+    <!-- Премиум класс -->
+    <div class="car-card">
+      <img src="https://a.allegroimg.com/s1024/0cac55/c9ef9c8e42808f1fea15890b6d84" alt="BMW 5 Series" />
+      <div class="car-info">
+        <h3>Тумбы</h3>
+        <div class="car-features">
+          <div>Тип: Виниловые</div>
+          <div>Толщина: 4 мм</div>
+          <div>Водостойкость: Да</div>
+        </div>
+        <div class="car-price">3 750 руб</div>
+        <button onclick="buyCar('Виниловые плитки', 3750)">Купить</button>
+      </div>
+    </div>
+
+    <div class="car-card">
+      <img src="https://cdn.vseinstrumenti.ru/images/goods/tovary-dlya-ofisa-i-doma/mebel/16346633/1200x800/181112831.jpg" alt="Mercedes-Benz E-Class" />
+      <div class="car-info">
+        <h3>Шкафы</h3>
+        <div class="car-features">
+          <div>Тип: дерево</div>
+          <div>Толщина: 15 мм</div>
+          <div>Покрытие: Масло-воск</div>
+        </div>
+        <div class="car-price">12 035руб</div>
+        <button onclick="buyCar('Инженерная доска', 12035)">Купить</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="secondary" onclick="backToMenu()">Назад в меню</button>
+  </div>
+</div>
+
+<!-- Новый каталог продукции -->
+<div id="newCatalogPage" class="section">
+  <h2>Каталог материалов</h2>
+  
+  <div class="car-grid">
+    <div class="car-card">
+     
+      <div class="car-info">
+        <h3>Дерево</h3>
+        <div class="car-features">
+          <div>Описание продукта 1</div>
+          <div>Артикул: 1001</div>
+          <div>Особенности: Высокое качество</div>
+        </div>
+        <div class="car-price">1 000 руб.</div>
+        <button onclick="buyCar('Дерево', 1000)">Купить</button>
+      </div>
+    </div>
+
+    <div class="car-card">
+      
+      <div class="car-info">
+        <h3>Деревянная плита</h3>
+        <div class="car-features">
+          <div>Описание продукта 2</div>
+          <div>Артикул: 1002</div>
+          <div>Особенности: Экологичный</div>
+        </div>
+        <div class="car-price">2 000 руб.</div>
+        <button onclick="buyCar('Деревянная плита', 2000)">Купить</button>
+      </div>
+    </div>
+
+    <div class="car-card">
+      
+      <div class="car-info">
+        <h3>Текстиль</h3>
+        <div class="car-features">
+          <div>Описание текстиля</div>
+          <div>Артикул: 1007</div>
+          <div>Особенности: Мягкий и прочный</div>
+        </div>
+        <div class="car-price">1 500 руб.</div>
+        <button onclick="buyCar('Текстиль', 1500)">Купить</button>
+      </div>
+    </div>
+
+    <div class="car-card">
+      
+      <div class="car-info">
+        <h3>Стекло</h3>
+        <div class="car-features">
+          <div>Описание стекла</div>
+          <div>Артикул: 1008</div>
+          <div>Особенности: Прозрачное и прочное</div>
+        </div>
+        <div class="car-price">2 000 руб.</div>
+        <button onclick="buyCar('Стекло', 2000)">Купить</button>
+      </div>
+    </div>
+
+    <div class="car-card">
+     
+      <div class="car-info">
+        <h3>Металл</h3>
+        <div class="car-features">
+          <div>Описание металла</div>
+          <div>Артикул: 1009</div>
+          <div>Особенности: Прочный и долговечный</div>
+        </div>
+        <div class="car-price">3 500 руб.</div>
+        <button onclick="buyCar('Металл', 3500)">Купить</button>
+      </div>
+    </div>
+
+    <div class="car-card">
+      
+      <div class="car-info">
+        <h3>Пластик</h3>
+        <div class="car-features">
+          <div>Описание пластика</div>
+          <div>Артикул: 1010</div>
+          <div>Особенности: Легкий и универсальный</div>
+        </div>
+        <div class="car-price">1 200 руб.</div>
+        <button onclick="buyCar('Пластик', 1200)">Купить</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="secondary" onclick="backToMenu()">Назад в меню</button>
+  </div>
+</div>
+
+<!-- Мои заказы -->
+<div id="myOrdersPage" class="section">
+  <h2>Мои заказы</h2>
+  <div id="userOrdersList"></div>
+  <div class="nav-buttons">
+    <button class="secondary" onclick="backToMenu()">Назад в меню</button>
+  </div>
+</div>
+
+<!-- Админский раздел с заказами -->
+<div id="adminOrders" class="section">
+  <h2>Управление заказами</h2>
+  <div id="adminOrderList"></div>
+  <div class="nav-buttons">
+    <button class="secondary" onclick="backToAdminMenu()">Назад в меню</button>
+  </div>
+</div>
+
+<script>
+  // Данные
+  let users = JSON.parse(localStorage.getItem('car_users')) || [];
+  let orders = JSON.parse(localStorage.getItem('car_orders')) || [];
+  let currentUser = null;
+  const adminPassword = "admin";
+  let isAdmin = false;
+
+  // DOM элементы
+  const regErrorEl = document.getElementById('regError');
+  const loginErrorEl = document.getElementById('loginError');
+  const adminErrorEl = document.getElementById('adminError');
+
+  // Функции навигации
+  function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+    clearErrors();
+  }
+
+  function showRegistration() {
+    showSection('registrationSection');
+    clearForm('registrationSection');
+  }
+
+  function showLogin() {
+    showSection('loginSection');
+    clearForm('loginSection');
+  }
+
+  function showAdminLogin() {
+    showSection('adminLoginSection');
+    clearForm('adminLoginSection');
+  }
+
+  function showMainMenu() {
+    showSection('mainMenu');
+    loadUserOrders();
+  }
+
+  function showAdminMenu() {
+    showSection('adminMenu');
+  }
+
+  function showCars() {
+    showSection('carsPage');
+  }
+
+  function showNewCatalog() {
+    showSection('newCatalogPage');
+  }
+
+  function showMyOrders() {
+    showSection('myOrdersPage');
+    loadUserOrders();
+  }
+
+  function showAdminOrders() {
+    showSection('adminOrders');
+    loadAdminOrders();
+  }
+
+  function backToMenu() {
+    if (isAdmin) {
+      showAdminMenu();
+    } else {
+      showMainMenu();
+    }
+  }
+
+  function backToAdminMenu() {
+    showAdminMenu();
+  }
+
+  // Функции работы с данными
+  function register() {
+    const firstName = document.getElementById('regFirstName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value.trim();
+
+    // Регулярное выражение для проверки email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Регулярное выражение для проверки имени (только буквы)
+    const nameRegex = /^[а-яА-ЯёЁa-zA-Z]+$/;
+
+    // Валидация
+    if (!firstName || !lastName || !email || !password) {
+      showError('regError', 'Заполните все поля');
+      return;
+    }
+
+    if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+      showError('regError', 'Имя и фамилия должны содержать только буквы');
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      showError('regError', 'Введите корректный email');
+      return;
+    }
+
+    if (password.length < 6) {
+      showError('regError', 'Пароль должен быть не менее 6 символов');
+      return;
+    }
+
+    if (users.find(u => u.email === email)) {
+      showError('regError', 'Этот email уже зарегистрирован');
+      return;
+    }
+
+    // Создание пользователя
+    const userId = Date.now();
+    const user = {
+      id: userId,
+      firstName,
+      lastName,
+      email,
+      password,
+      isAdmin: false
+    };
+
+    users.push(user);
+    localStorage.setItem('car_users', JSON.stringify(users));
+
+    // Автовход после регистрации
+    currentUser = user;
+    document.getElementById('userName').textContent = user.firstName + ' ' + user.lastName;
+    showMainMenu();
+  }
+
+  function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    // Регулярное выражение для проверки email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email || !password) {
+      showError('loginError', 'Заполните все поля');
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      showError('loginError', 'Введите корректный email');
+      return;
+    }
+
+    if (password.length < 6) {
+      showError('loginError', 'Пароль должен быть не менее 6 символов');
+      return;
+    }
+
+    // Поиск пользователя
+    const user = users.find(u => u.email === email && u.password === password);
+
+    if (user) {
+      currentUser = user;
+      document.getElementById('userName').textContent = user.firstName + ' ' + user.lastName;
+      showMainMenu();
+    } else {
+      showError('loginError', 'Неверный email или пароль');
+    }
+
+    clearForm('loginSection');
+  }
+
+  function adminLogin() {
+    const password = document.getElementById('adminPassword').value.trim();
+    
+    if (password === adminPassword) {
+      isAdmin = true;
+      showAdminMenu();
+    } else {
+      showError('adminError', 'Неверный пароль администратора');
+    }
+    
+    clearForm('adminLoginSection');
+  }
+
+  function logout() {
+    currentUser = null;
+    isAdmin = false;
+    showRegistration();
+  }
+
+  function adminLogout() {
+    isAdmin = false;
+    showRegistration();
+  }
+
+  function buyCar(name, price) {
+    if (!currentUser) {
+      alert('Пожалуйста, войдите в систему для оформления заказа');
+      showLogin();
+      return;
+    }
+    
+    const order = {
+      id: Date.now(),
+      user: currentUser.firstName + ' ' + currentUser.lastName,
+      email: currentUser.email,
+      carName: name,
+      price: price,
+      date: new Date().toLocaleString(),
+      userId: currentUser.id,
+      status: 'Новый'
+    };
+    
+    orders.push(order);
+    localStorage.setItem('car_orders', JSON.stringify(orders));
+    
+    alert(`Заказ на "${name}" на сумму ${price.toLocaleString()} руб. оформлен!`);
+    loadUserOrders();
+  }
+
+  // Функции отображения данных
+  function loadUserOrders() {
+    const container = document.getElementById('userOrdersList');
+    
+    if (!currentUser) {
+      container.innerHTML = '<p style="text-align:center; color:#7f8c8d;">Пожалуйста, войдите, чтобы видеть заказы</p>';
+      return;
+    }
+    
+    const userOrders = orders.filter(o => o.userId === currentUser.id);
+    
+    if (userOrders.length === 0) {
+      container.innerHTML = '<p style="text-align:center; color:#7f8c8d;">У вас пока нет заказов</p>';
+    } else {
+      container.innerHTML = userOrders.map((order, index) => `
+        <div class="order-card">
+          <h3>Заказ #${order.id.toString().slice(-4)}</h3>
+          <p><strong>Продукт:</strong> ${order.carName}</p>
+          <p><strong>Стоимость:</strong> ${order.price.toLocaleString()} руб.</p>
+          <p><strong>Дата:</strong> ${order.date}</p>
+          <p><strong>Статус:</strong> <span style="color:${getStatusColor(order.status)}">${order.status}</span></p>
+          ${order.status !== 'Отменен' ? `<button onclick="updateOrderStatus(${order.id}, 'Отменен')">Отменить заказ</button>` : ''}
+        </div>
+      `).join('');
+    }
+  }
+
+  function loadAdminOrders() {
+    const container = document.getElementById('adminOrderList');
+    
+    if (orders.length === 0) {
+      container.innerHTML = '<p style="text-align:center; color:#7f8c8d;">Нет заказов</p>';
+    } else {
+      container.innerHTML = orders.map(order => `
+        <div class="order-card">
+          <h3>Заказ #${order.id.toString().slice(-4)}</h3>
+          <p><strong>Клиент:</strong> ${order.user} (ID: ${order.userId})</p>
+          <p><strong>Email:</strong> ${order.email}</p>
+          <p><strong>Автомобиль:</strong> ${order.carName}</p>
+          <p><strong>Стоимость:</strong> ${order.price.toLocaleString()} руб.</p>
+          <p><strong>Дата:</strong> ${order.date}</p>
+          <p><strong>Статус:</strong> <span style="color:${getStatusColor(order.status)}">${order.status}</span></p>
+          <div class="nav-buttons">
+            <button onclick="updateOrderStatus(${order.id}, 'Одобрен')">Одобрить</button>
+            <button class="danger" onclick="updateOrderStatus(${order.id}, 'Отклонен')">Отклонить</button>
+            <button class="secondary" onclick="deleteOrder(${order.id})">Удалить</button>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+
+  function updateOrderStatus(orderId, newStatus) {
+    const orderIndex = orders.findIndex(o => o.id === orderId);
+    
+    if (orderIndex !== -1) {
+      orders[orderIndex].status = newStatus;
+      localStorage.setItem('car_orders', JSON.stringify(orders));
+      
+      if (isAdmin) {
+        loadAdminOrders();
+      } else if (currentUser) {
+        loadUserOrders();
+      }
+    }
+  }
+
+  function deleteOrder(orderId) {
+    if (confirm('Вы уверены, что хотите удалить этот заказ?')) {
+      orders = orders.filter(o => o.id !== orderId);
+      localStorage.setItem('car_orders', JSON.stringify(orders));
+      
+      if (isAdmin) {
+        loadAdminOrders();
+      } else if (currentUser) {
+        loadUserOrders();
+      }
+    }
+  }
+
+  // Вспомогательные функции
+  function getStatusColor(status) {
+    switch(status) {
+      case 'Новый': return '#2980b9';
+      case 'Одобрен': return '#27ae60';
+      case 'Отклонен': return '#e74c3c';
+      case 'Отменен': return '#e67e22';
+      default: return '#7f8c8d';
+    }
+  }
+
+  function showError(elementId, message) {
+    document.getElementById(elementId).textContent = message;
+  }
+
+  function clearErrors() {
+    regErrorEl.textContent = '';
+    loginErrorEl.textContent = '';
+    adminErrorEl.textContent = '';
+  }
+
+  function clearForm(sectionId) {
+    const form = document.getElementById(sectionId);
+    const inputs = form.querySelectorAll('input');
+    inputs.forEach(input => input.value = '');
+  }
+
+  // Инициализация
+  showSection('registrationSection');
+</script>
+</body>
+</html>
